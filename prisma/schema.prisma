@@ -17,3 +17,9 @@ model User {
 
   @@map("User")
 }
+
+model Settings {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @unique
+    userLangs String[]
+}

@@ -20,6 +20,7 @@ export class UserController {
     }
 
     @Get(':id')
+    @ApiResponse({ status: 200, description: 'User found' })
     async getOne(@Param('id') id: string): Promise<User | null> {
         return this.service.getById(id);
     }
