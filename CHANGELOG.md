@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.2...v0.0.3) (2026-08-13)
+
+
+### Features
+
+* **Settings:**  add settings module ([31c637c](https://github.com/aghyadallogie/Persodict-BE/commit/31c637c8a5d526b784779b2cb7ad4e7af07dc74a))
+
 ### 0.0.2 (2026-08-13)
 
 
