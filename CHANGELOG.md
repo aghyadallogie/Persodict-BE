@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.5...v0.0.6) (2026-08-17)
+
+
+### Bug Fixes
+
+* **Settings:** protect settings route with current user decorator ([f41bc62](https://github.com/aghyadallogie/Persodict-BE/commit/f41bc623fffbd04deec0090421459af4e5f0f56b))
+
 ### [0.0.5](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.4...v0.0.5) (2026-08-15)
 
 ### [0.0.4](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.3...v0.0.4) (2026-08-13)
