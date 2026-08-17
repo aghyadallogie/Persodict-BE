@@ -19,7 +19,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   /**
    * Validates user credentials against stored data
@@ -30,7 +30,7 @@ export class AuthService {
    *   email: 'user@example.com',
    *   password: 'userpassword'
    * });
-  */
+   */
   async validateUser(input: AuthInput): Promise<SignInData | null> {
     const user = await this.userService.findByEmail(input.email);
     if (!user || !user.password) {
@@ -59,7 +59,7 @@ export class AuthService {
    *   email: 'user@example.com',
    *   password: 'userpassword'
    * });
-  */
+   */
   async authenticate(input: AuthInput): Promise<AuthResult> {
     const validUser = await this.validateUser(input);
     if (!validUser) throw new UnauthorizedException('Invalid credentials');
@@ -76,7 +76,7 @@ export class AuthService {
    *   id: 'user123',
    *   email: 'user@example.com'
    * });
-  */
+   */
   async signIn(user: SignInData): Promise<AuthResult> {
     const payload = { sub: user.id, email: user.email };
 
@@ -95,10 +95,10 @@ export class AuthService {
    * @example
    * const result = await authService.register({
    *   email: 'user@example.com',
-   *   password: 'securepassword', 
+   *   password: 'securepassword',
    *   name: 'John Doe',
    * });
-  */
+   */
   async register(input: RegisterDto): Promise<AuthResult> {
     const existing = await this.userService.findByEmail(input.email);
     if (existing) throw new BadRequestException('Email already in use');

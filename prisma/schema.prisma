@@ -19,7 +19,13 @@ model User {
 }
 
 model Settings {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    userId    String   @unique
-    userLangs String[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  userLangs String[]
+}
+
+model Phrase {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId     String
+  translations Json
 }

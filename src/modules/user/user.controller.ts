@@ -7,21 +7,21 @@ import { UserService } from './user.service';
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-    constructor(private readonly service: UserService) { }
+  constructor(private readonly service: UserService) {}
 
-    @Post()
-    @ApiResponse({ status: 201, description: 'User registered' })
-    async create(@Body() dto: CreateUserDto): Promise<User> {
-        return this.service.register({
-            email: dto.email,
-            password: dto.password,
-            name: dto.name ?? '',
-        });
-    }
+  @Post()
+  @ApiResponse({ status: 201, description: 'User registered' })
+  async create(@Body() dto: CreateUserDto): Promise<User> {
+    return this.service.register({
+      email: dto.email,
+      password: dto.password,
+      name: dto.name ?? '',
+    });
+  }
 
-    @Get(':id')
-    @ApiResponse({ status: 200, description: 'User found' })
-    async getOne(@Param('id') id: string): Promise<User | null> {
-        return this.service.getById(id);
-    }
+  @Get(':id')
+  @ApiResponse({ status: 200, description: 'User found' })
+  async getOne(@Param('id') id: string): Promise<User | null> {
+    return this.service.getById(id);
+  }
 }
