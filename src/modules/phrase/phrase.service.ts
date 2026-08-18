@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SettingsService } from '../settings/settings.service';
+import { SettingsService } from '@/modules/settings/settings.service';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { PhraseRepository } from './repository/phrase.repository';
 import { Phrase } from './domain/phrase.model';
@@ -151,7 +151,9 @@ export class PhraseService {
       );
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      translations: { text: string }[];
+    };
     if (!data.translations?.[0]?.text) {
       throw new InternalServerErrorException(
         'Invalid response format from DeepL API',

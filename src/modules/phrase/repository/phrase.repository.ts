@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Phrase as PrismaPhrase } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Phrase } from '../domain/phrase.model';
+import { Phrase as PrismaPhrase } from '@prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
+import { Phrase } from '@/modules/phrase/domain/phrase.model';
 
 @Injectable()
 export class PhraseRepository {

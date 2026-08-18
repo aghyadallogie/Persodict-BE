@@ -14,6 +14,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { PassportJwtAuthGuard } from './guards/passport-jwt.guard';
 import { PassportLocalGuard } from './guards/passport-local.guard';
+import type { AuthenticatedRequest } from './types/authenticated-request.interface';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -35,7 +36,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(PassportJwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: AuthenticatedRequest) {
     return req.user;
   }
 

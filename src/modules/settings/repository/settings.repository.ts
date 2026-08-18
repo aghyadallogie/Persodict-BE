@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Settings } from '../domain/settings.model';
+import { Settings } from '@/modules/settings/domain/settings.model';
 import { PrismaService } from '@/prisma/prisma.service';
+import { Settings as PrismaSettings } from '@prisma/client';
 
 @Injectable()
 export class SettingsRepository {
@@ -27,7 +28,7 @@ export class SettingsRepository {
     return row ? this.toDomain(row) : null;
   }
 
-  private toDomain(row: any): Settings {
+  private toDomain(row: PrismaSettings): Settings {
     return {
       id: row.id,
       userId: row.userId,

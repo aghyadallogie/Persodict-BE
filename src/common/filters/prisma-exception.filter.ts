@@ -6,11 +6,12 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { Response } from 'express';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
-    const response = host.switchToHttp().getResponse();
+    const response = host.switchToHttp().getResponse<Response>();
     switch (exception.code) {
       case 'P2025': {
         const notFound = new NotFoundException('Record not found');

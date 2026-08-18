@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsObject, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsObject } from 'class-validator';
 
 export class CreatePhraseDto {
   @IsString()

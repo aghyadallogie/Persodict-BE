@@ -24,4 +24,7 @@ async function bootstrap() {
   console.log('http://0.0.0.0:3000/api');
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Failed to start application:', err);
+  process.exit(1);
+});

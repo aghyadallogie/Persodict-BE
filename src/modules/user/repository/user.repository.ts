@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from '../domain/user.model';
+import { User } from '@/modules/user/domain/user.model';
+import { User as PrismaUser } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
@@ -34,7 +35,7 @@ export class UserRepository {
   }
 
   /* ---------- helpers ---------- */
-  private toDomain(row: any): User {
+  private toDomain(row: PrismaUser): User {
     /* isolate Prisma shape from domain */
     return {
       id: row.id,

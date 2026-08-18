@@ -19,7 +19,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   /**
    * Validates user credentials against stored data
@@ -77,7 +77,7 @@ export class AuthService {
    *   email: 'user@example.com'
    * });
    */
-  async signIn(user: SignInData): Promise<AuthResult> {
+  signIn(user: SignInData): AuthResult {
     const payload = { sub: user.id, email: user.email };
 
     return {
