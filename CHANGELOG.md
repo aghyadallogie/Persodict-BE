@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.7...v0.0.8) (2026-08-18)
+
+
+### Bug Fixes
+
+* **Types:** fix type any and linting issues ([5570f0c](https://github.com/aghyadallogie/Persodict-BE/commit/5570f0c407621477291f82c336a2988012707315))
+
 ### [0.0.7](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.6...v0.0.7) (2026-08-18)
 
 
