@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.6...v0.0.7) (2026-08-18)
+
+
+### Features
+
+* **Phrase:** add module for the resource Phrase ([a8c10ba](https://github.com/aghyadallogie/Persodict-BE/commit/a8c10ba1578d8045797ed29726f3a951f6a05e22))
+
 ### [0.0.6](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.5...v0.0.6) (2026-08-17)
 
 
