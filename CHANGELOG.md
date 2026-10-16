@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.8...v0.0.9) (2026-10-16)
+
+
+### Bug Fixes
+
+* **imports:** fix import alias ([f2363b2](https://github.com/aghyadallogie/Persodict-BE/commit/f2363b2545addc1743db4e8f73909a64cd07e9a3))
+
 ### [0.0.8](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.7...v0.0.8) (2026-08-18)
 
 
