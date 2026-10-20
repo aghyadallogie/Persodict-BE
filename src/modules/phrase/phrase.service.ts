@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SettingsService } from '@/modules/settings/settings.service';
+import { SettingsService } from '../../modules/settings/settings.service';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { PhraseRepository } from './repository/phrase.repository';
 import { Phrase } from './domain/phrase.model';

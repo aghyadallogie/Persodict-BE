@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Settings } from '@/modules/settings/domain/settings.model';
-import { PrismaService } from '@/prisma/prisma.service';
+import { Settings } from '../../../modules/settings/domain/settings.model';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { Settings as PrismaSettings } from '@prisma/client';
 
 @Injectable()
