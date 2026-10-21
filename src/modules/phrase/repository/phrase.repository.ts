@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Phrase as PrismaPhrase } from '@prisma/client';
-import { PrismaService } from '../../../prisma/prisma.service';
 import { Phrase } from '../../../modules/phrase/domain/phrase.model';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class PhraseRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /* ---------- creators ---------- */
   async create(data: Omit<Phrase, 'id'>): Promise<Phrase> {

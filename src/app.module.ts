@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './modules/user/user.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { SettingsModule } from './modules/settings/settings.module';
 import { PhraseModule } from './modules/phrase/phrase.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -13,5 +15,7 @@ import { PhraseModule } from './modules/phrase/phrase.module';
     SettingsModule,
     PhraseModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

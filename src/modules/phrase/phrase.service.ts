@@ -1,15 +1,15 @@
 import {
-  Injectable,
   BadRequestException,
   ForbiddenException,
+  Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SettingsService } from '../../modules/settings/settings.service';
+import { Phrase } from './domain/phrase.model';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { PhraseRepository } from './repository/phrase.repository';
-import { Phrase } from './domain/phrase.model';
 
 interface DeepLResult {
   lang: string;
@@ -22,7 +22,7 @@ export class PhraseService {
     private readonly repo: PhraseRepository,
     private readonly settingsService: SettingsService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   /* ---------- reads ---------- */
   async getPhrases(authorId: string): Promise<Phrase[]> {
