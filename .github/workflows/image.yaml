@@ -1,0 +1,79 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+concurrency:
+  group: image-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: persodict-api
+  ECR_REGISTRY: 403874533389.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout app repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Compute image tag
+        id: tag
+        run: |
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "target_env=staging" >> "$GITHUB_OUTPUT"
+            echo "tag=v${GITHUB_REF_NAME#v}-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          else
+            echo "target_env=testing" >> "$GITHUB_OUTPUT"
+            echo "tag=sha-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.tag.outputs.tag }} \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.tag.outputs.tag }}
+
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v4
+        with:
+          repository: aghyadallogie/persodict-gitops
+          token: ${{ secrets.GITOPS_PAT }}
+          path: gitops
+
+      - name: Update image tag in GitOps repo
+        working-directory: gitops
+        run: |
+          ENV_FILE="apps/persodict/chart/${{ steps.tag.outputs.target_env }}.yaml"
+          echo "Updating ${ENV_FILE} with tag ${{ steps.tag.outputs.tag }}"
+          sed -i "s|^  tag:.*|  tag: \"${{ steps.tag.outputs.tag }}\"|" "${ENV_FILE}"
+          git diff --exit-code "${ENV_FILE}" && echo "No change, skipping commit" && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${ENV_FILE}"
+          git commit -m "chore: bump ${{ steps.tag.outputs.target_env }} image to ${{ steps.tag.outputs.tag }}"
+          git push
