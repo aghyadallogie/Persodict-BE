@@ -8,7 +8,7 @@ export class UserService {
 
   async register(data: {
     email: string;
-    password: string;
+    password: string | null;
     name?: string;
   }): Promise<User> {
     const exists = await this.repo.findByEmail(data.email);
@@ -22,6 +22,13 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User | null> {
     return this.repo.findByEmail(email);
+  }
+
+  /** Just { id, email }: enough to sign someone in, and tolerant of incomplete old records. */
+  async findIdentityByEmail(
+    email: string,
+  ): Promise<{ id: string; email: string } | null> {
+    return this.repo.findIdentityByEmail(email);
   }
 
   async getById(id: string): Promise<User | null> {

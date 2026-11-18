@@ -10,7 +10,7 @@ datasource db {
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
-  password  String
+  password  String? // null for accounts created without one (e.g. Google sign-in)
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

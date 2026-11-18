@@ -1,10 +1,13 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { UserService } from '../user/user.service';
 import { RegisterDto } from './dto/register.dto';
 
@@ -16,9 +19,13 @@ type AuthResult = { id: string; email: string; token: string };
 
 @Injectable()
 export class AuthService {
+  /** Verifies Google ID tokens (signature, expiry, audience) against Google's public keys. */
+  private readonly googleClient = new OAuth2Client();
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
   ) { }
 
   /**
@@ -85,6 +92,54 @@ export class AuthService {
       email: user.email,
       token: this.jwtService.sign(payload),
     };
+  }
+
+  /**
+   * Signs a user in with a Google ID token, creating the account on first use.
+   * The token must be issued for our Web OAuth client (`GOOGLE_WEB_CLIENT_ID`) and carry a
+   * verified email. The email is the identity: an existing password account with the same email
+   * is signed in as-is (including accounts that have no password), otherwise a new Google-only
+   * account is created. Google-only accounts have a null password, which `validateUser` never
+   * accepts, so they cannot be logged into with email + password.
+   * @param {string} idToken - Google ID token sent by the mobile app
+   * @returns {Promise<AuthResult>} Authentication result with user details and JWT token
+   * @throws {UnauthorizedException} When the token is invalid, expired or for another client
+   * @throws {BadRequestException} When the Google email is not verified
+   * @throws {InternalServerErrorException} When `GOOGLE_WEB_CLIENT_ID` is not configured
+   */
+  async authenticateWithGoogle(idToken: string): Promise<AuthResult> {
+    const audience = this.config.get<string>('GOOGLE_WEB_CLIENT_ID');
+    if (!audience) {
+      throw new InternalServerErrorException(
+        'Google sign-in is not configured',
+      );
+    }
+
+    let payload: TokenPayload | undefined;
+    try {
+      const ticket = await this.googleClient.verifyIdToken({
+        idToken,
+        audience,
+      });
+      payload = ticket.getPayload();
+    } catch {
+      throw new UnauthorizedException('Invalid Google token');
+    }
+
+    if (!payload?.email || !payload.email_verified) {
+      throw new BadRequestException('Your Google email is not verified');
+    }
+
+    // Identity only (id + email): sign-in must not depend on the rest of the row being complete.
+    const user =
+      (await this.userService.findIdentityByEmail(payload.email)) ??
+      (await this.userService.register({
+        email: payload.email,
+        name: payload.name,
+        password: null,
+      }));
+
+    return this.signIn({ id: user.id, email: user.email });
   }
 
   /**

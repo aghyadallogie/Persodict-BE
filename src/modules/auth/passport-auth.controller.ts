@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { GoogleAuthDto } from './dto/google-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { PassportJwtAuthGuard } from './guards/passport-jwt.guard';
@@ -30,6 +31,18 @@ export class AuthController {
       email: body.email,
       password: body.password,
     });
+  }
+
+  /* ---------- login / sign up with Google ---------- */
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: 'Signed in with Google (account created on first use)',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid Google token' })
+  googleLogin(@Body() dto: GoogleAuthDto) {
+    return this.authService.authenticateWithGoogle(dto.idToken);
   }
 
   /* ---------- whoami ---------- */
