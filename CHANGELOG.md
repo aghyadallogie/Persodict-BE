@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.16...v0.0.17) (2026-11-18)
+
+
+### Features
+
+* **auth:** add Google sign-in on login and register ([a8bcd2a](https://github.com/aghyadallogie/Persodict-BE/commit/a8bcd2a52df27181e76dc44a8b0718da5db7a6f2))
+
 ### [0.0.16](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.15...v0.0.16) (2026-11-17)
 
 ### [0.0.15](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.14...v0.0.15) (2026-10-21)
