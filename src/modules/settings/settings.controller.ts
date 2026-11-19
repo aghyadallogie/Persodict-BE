@@ -13,13 +13,14 @@ import { CurrentUser } from '../auth/current-user.decorator';
 export class SettingsController {
   constructor(private readonly service: SettingsService) {}
 
+  /** Saves the logged-in user's languages. The user comes from the token, never from the body. */
   @Post()
   @ApiResponse({ status: 201, description: 'Settings registered' })
-  async create(@Body() dto: CreateSettingsDto): Promise<Settings> {
-    return this.service.create({
-      userId: dto.userId,
-      userLangs: dto.userLangs,
-    });
+  async create(
+    @CurrentUser() userId: string,
+    @Body() dto: CreateSettingsDto,
+  ): Promise<Settings> {
+    return this.service.create(userId, dto.userLangs);
   }
 
   @Get()

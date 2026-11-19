@@ -4,18 +4,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Settings } from './domain/settings.model';
-import { CreateSettingsDto } from './dto/create-settings.dto';
 import { SettingsRepository } from './repository/settings.repository';
 
 @Injectable()
 export class SettingsService {
   constructor(private readonly repo: SettingsRepository) {}
 
-  async create(data: CreateSettingsDto): Promise<Settings> {
-    if (!data.userLangs?.length) {
+  async create(userId: string, userLangs: string[]): Promise<Settings> {
+    if (!userLangs?.length) {
       throw new BadRequestException('At least one language is required');
     }
-    return this.repo.create(data);
+    return this.repo.create({ userId, userLangs });
   }
 
   async getByUserId(userId: string): Promise<Settings> {
