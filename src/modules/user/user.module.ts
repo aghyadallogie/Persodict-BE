@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaModule } from '../../prisma/prisma.module';
 import { UserRepository } from './repository/user.repository';
 import { UserService } from './user.service';
 
@@ -9,7 +9,8 @@ import { UserService } from './user.service';
  * record, password hash included, to unauthenticated callers.
  */
 @Module({
-  providers: [UserService, UserRepository, PrismaService],
+  imports: [PrismaModule],
+  providers: [UserService, UserRepository],
   exports: [UserService],
 })
 export class UserModule {}
