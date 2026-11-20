@@ -6,7 +6,7 @@ import { normalizeEmail } from '../email';
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   /* ---------- creators ---------- */
   async create(data: {

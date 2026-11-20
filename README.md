@@ -1,98 +1,63 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Persodict API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend for Persodict, a personal translation dictionary. A user signs in, picks the languages they care about, and translates a phrase: the API translates it with DeepL into English plus each chosen language, stores it, and returns their history.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+NestJS 11, Prisma 6 on MongoDB, passport-jwt. Deployed on Vercel at `https://persodict-be.vercel.app`. Routes live at the root (there is no `/api` prefix); `/api` is only the Swagger UI.
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## Setup
 
 ```bash
-$ npm install
+npm install            # also runs `prisma generate`
+npm run start:dev      # needs a .env with the variables below
 ```
 
-## Compile and run the project
+### Environment variables
+
+| Variable | Required | What it is |
+|---|---|---|
+| `DATABASE_URL` | yes | MongoDB connection string |
+| `JWT_SECRET` | yes | Signs login tokens. The app refuses to start without it, and there is no fallback |
+| `DEEPL_AUTH_KEY` | yes | DeepL API key (free-tier endpoint) used for translations |
+| `GOOGLE_WEB_CLIENT_ID` | for Google sign-in | The **Web** OAuth client ID. Google ID tokens must be issued for it |
+| `PORT` | no | Defaults to 3000 |
+
+## Routes
+
+| Route | Auth | Purpose |
+|---|---|---|
+| `POST /auth/register`, `POST /auth/login` | no | Email and password. Returns `{ id, email, token }` |
+| `POST /auth/google` | no | Body `{ idToken }`. Same response as login; finds or creates the user by verified email |
+| `GET /auth/me` | yes | The logged-in user's id and email, from the token |
+| `GET /settings`, `POST /settings` | yes | The user's languages (`POST` replaces them) |
+| `GET /phrases` | yes | The user's phrases, oldest first |
+| `POST /phrases/translate` | yes | Translates and saves a phrase. Limited to 10 per minute per user; saves nothing if any language fails |
+| `DELETE /phrases/:phraseId` | yes | Deletes one of the user's phrases |
+| `GET /health` | no | `{ status: "ok" }` |
+
+Authenticated routes expect `Authorization: Bearer <token>`.
+
+## Scripts
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev   # watch mode
+npm run build       # compile to dist/
+npm test            # unit tests (jest)
+npm run lint
+npx tsc --noEmit    # typecheck
 ```
 
-## Run tests
+## Database
+
+Prisma does not create MongoDB indexes when the app starts or builds. After changing `prisma/schema.prisma` (for example the `Phrase.authorId` index), run:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npx prisma db push
 ```
 
-## Deployment
+## Releases
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Every push to `main` runs `.github/workflows/pipeline.yaml`: install, tests, then `standard-version` bumps the version, updates `CHANGELOG.md`, tags it and creates a GitHub release. Pull before you push, since that release commit lands on `main`.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Archived: AWS / EKS setup
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+The app was first deployed on AWS (EKS, Terraform, ArgoCD, ECR) as a proof of concept, then moved to Vercel. That work is kept as commented-out reference in [`docs/aws-eks-reference`](docs/aws-eks-reference). The `Dockerfile` and `compose.yaml` in the root are left over from it and are not used for deployment.

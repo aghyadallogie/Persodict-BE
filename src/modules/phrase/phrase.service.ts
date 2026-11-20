@@ -10,7 +10,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { SettingsService } from '../../modules/settings/settings.service';
 import { Phrase } from './domain/phrase.model';
-import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { PhraseRepository } from './repository/phrase.repository';
 
 interface DeepLResult {
@@ -32,10 +31,6 @@ export class PhraseService {
   }
 
   /* ---------- writes ---------- */
-  async addPhrase(dto: CreatePhraseDto): Promise<Phrase> {
-    return this.repo.create(dto);
-  }
-
   async translateAndSavePhrase(
     authorId: string,
     text: string,

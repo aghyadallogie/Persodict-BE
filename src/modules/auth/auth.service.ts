@@ -26,7 +26,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
-  ) { }
+  ) {}
 
   /**
    * Validates user credentials against stored data

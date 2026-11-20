@@ -5,7 +5,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class SettingsRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   /* ---------- creators ---------- */
   async create(data: Omit<Settings, 'id'>): Promise<Settings> {
