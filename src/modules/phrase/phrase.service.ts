@@ -1,6 +1,8 @@
 import {
+  BadGatewayException,
   BadRequestException,
   ForbiddenException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -78,11 +80,18 @@ export class PhraseService {
     try {
       return await this.translatePhraseToLangs(text, settings.userLangs);
     } catch (error) {
+      // Errors we raised on purpose already carry the right status and message.
+      if (error instanceof HttpException) throw error;
       console.error('Translation failed:', error);
       throw new InternalServerErrorException('Failed to translate phrase');
     }
   }
 
+  /**
+   * Translates into English plus every language of the user, all or nothing: if any language
+   * fails, nothing is returned, so the caller never saves a phrase with missing translations
+   * that the user could not repair (and that would otherwise look like a success).
+   */
   private async translatePhraseToLangs(
     text: string,
     langs: string[],
@@ -93,16 +102,24 @@ export class PhraseService {
     );
 
     const translations: DeepLResult[] = [];
+    const failedLangs: string[] = [];
     results.forEach((result, i) => {
-      if (result.status === 'fulfilled' && result.value !== undefined) {
+      if (result.status === 'fulfilled') {
         translations.push(result.value);
-      } else if (result.status === 'rejected') {
+      } else {
+        failedLangs.push(targetLangs[i]);
         console.error(
           `Translation failed for lang "${targetLangs[i]}":`,
           result.reason,
         );
       }
     });
+
+    if (failedLangs.length > 0) {
+      throw new BadGatewayException(
+        `Could not translate to: ${failedLangs.join(', ')}. Nothing was saved, please try again.`,
+      );
+    }
     return translations;
   }
 
@@ -110,7 +127,7 @@ export class PhraseService {
     text: string,
     lang: string,
     retryCount = 0,
-  ): Promise<DeepLResult | undefined> {
+  ): Promise<DeepLResult> {
     const MAX_RETRIES = 3;
     const apiKey = this.configService.get<string>('DEEPL_AUTH_KEY');
 
