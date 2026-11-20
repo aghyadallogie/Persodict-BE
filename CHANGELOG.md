@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.17...v0.0.18) (2026-11-18)
+
+
+### Bug Fixes
+
+* **user:** normalize emails to lowercase and match them exactly ([8fa511a](https://github.com/aghyadallogie/Persodict-BE/commit/8fa511a0337c0344b898347643d80f0c6d32cbb9))
+
 ### [0.0.17](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.16...v0.0.17) (2026-11-18)
 
 
