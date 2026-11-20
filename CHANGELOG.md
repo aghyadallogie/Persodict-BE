@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.18...v0.0.19) (2026-11-20)
+
+
+### Bug Fixes
+
+* **auth:** require JWT_SECRET instead of falling back to a public default ([cde8b76](https://github.com/aghyadallogie/Persodict-BE/commit/cde8b763d67b9f2c93058d4f6a837168c44e6120))
+* **settings:** save settings for the logged-in user, not the userId in the body ([3a9808f](https://github.com/aghyadallogie/Persodict-BE/commit/3a9808f00dc6367b47f71c1cedf70e3b46136c31))
+* **user:** remove the public /users routes that exposed password hashes ([8e8518b](https://github.com/aghyadallogie/Persodict-BE/commit/8e8518b9c28f983c4bbce2081e268a2205c5b5f3))
+
 ### [0.0.18](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.17...v0.0.18) (2026-11-18)
 
 
