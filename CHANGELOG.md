@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.20...v0.0.21) (2026-11-20)
+
+
+### Features
+
+* **phrase:** index authorId, order the list and limit translate input and rate ([f8ac46f](https://github.com/aghyadallogie/Persodict-BE/commit/f8ac46fba2a80cc616dcc81794f241aaff2779c8))
+
+
+### Bug Fixes
+
+* **phrase:** save a phrase only when every language translates ([bc60518](https://github.com/aghyadallogie/Persodict-BE/commit/bc6051804c5895d632483da46449388aba070169))
+
 ### [0.0.20](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.19...v0.0.20) (2026-11-20)
 
 ### [0.0.19](https://github.com/aghyadallogie/Persodict-BE/compare/v0.0.18...v0.0.19) (2026-11-20)
