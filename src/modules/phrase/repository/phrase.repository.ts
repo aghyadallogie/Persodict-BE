@@ -5,7 +5,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class PhraseRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   /* ---------- creators ---------- */
   async create(data: Omit<Phrase, 'id'>): Promise<Phrase> {
@@ -20,7 +20,12 @@ export class PhraseRepository {
 
   /* ---------- readers ---------- */
   async findByAuthorId(authorId: string): Promise<Phrase[]> {
-    const rows = await this.prisma.phrase.findMany({ where: { authorId } });
+    // Oldest first, stated explicitly: ids are ObjectIds, which sort by creation time, and the
+    // app relies on a new phrase landing at the end of the list.
+    const rows = await this.prisma.phrase.findMany({
+      where: { authorId },
+      orderBy: { id: 'asc' },
+    });
     return rows.map((row) => this.toDomain(row));
   }
 

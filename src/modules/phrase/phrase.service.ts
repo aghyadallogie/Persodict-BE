@@ -24,7 +24,7 @@ export class PhraseService {
     private readonly repo: PhraseRepository,
     private readonly settingsService: SettingsService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   /* ---------- reads ---------- */
   async getPhrases(authorId: string): Promise<Phrase[]> {

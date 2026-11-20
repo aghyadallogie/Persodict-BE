@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserThrottlerGuard } from '../../common/guards/user-throttler.guard';
 import { PhraseService } from './phrase.service';
 import { PassportJwtAuthGuard } from '../auth/guards/passport-jwt.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -27,8 +28,11 @@ export class PhraseController {
     return this.phraseService.getPhrases(authorId);
   }
 
+  /** Every call costs one DeepL request per language, so it is limited per user (see PhraseModule). */
   @Post('translate')
+  @UseGuards(UserThrottlerGuard)
   @ApiResponse({ status: 201, description: 'Phrase translated and saved' })
+  @ApiResponse({ status: 429, description: 'Too many translations, slow down' })
   async translatePhrase(
     @CurrentUser() authorId: string,
     @Body() dto: TranslateTextDto,

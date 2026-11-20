@@ -28,4 +28,8 @@ model Phrase {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   authorId     String
   translations Json
+
+  // Every read ("my phrases") filters on the author; without this MongoDB scans the whole collection.
+  // Apply with `npx prisma db push` (Prisma does not create MongoDB indexes any other way).
+  @@index([authorId])
 }
